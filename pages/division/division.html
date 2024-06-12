@@ -18,6 +18,68 @@
     <link rel="stylesheet" href="../../../assets/css/vertical-light-layout/style.css">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="../../../assets/images/favicon.png" />
+    <style>
+        .edit-button, .delete-button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 2px 2px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.delete-button {
+    background-color: #DC3545;
+}
+
+.edit-button:hover {
+    background-color: #0056b3;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}
+/* CSS untuk modal */
+.modal {
+  display: none; /* Sembunyikan modal secara default */
+  position: fixed;
+  z-index: 1000; /* Atur z-index agar modal muncul di atas konten lain */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4); /* Transparansi latar belakang */
+}
+
+.modal-content {
+  background-color: #fefefe; /* Warna latar belakang konten modal */
+  margin: 15% auto; /* Posisikan modal di tengah-tengah layar */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  border-radius: 5px; /* Bentuk pinggiran modal */
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+    </style>
   </head>
   <body>
     <div class="container-scroller">
@@ -145,14 +207,26 @@
                               <tr>
                                 <td> Test </td>
                                 <td> May 15, 2015 </td>
+                                <td>
+                                    <button class="edit-button"><img src="/assets/images/pencil.png" style="width: 15px; height: 15%;"></button>
+                                    <button class="delete-button"><img src="/assets/images/trash-can.png" style="width: 15px; height: 15%;"></button>
+                                </td>
                               </tr>
                               <tr>
                                 <td> Test </td>
                                 <td> May 15, 2015 </td>
+                                <td>
+                                    <button class="edit-button"><img src="/assets/images/pencil.png" style="width: 15px; height: 15%;"></button>
+                                    <button class="delete-button"><img src="/assets/images/trash-can.png" style="width: 15px; height: 15%;"></button>
+                                </td>
                               </tr>
                               <tr>
                                 <td> Test </td>
                                 <td> May 15, 2015 </td>
+                                <td>
+                                    <button class="edit-button"><img src="/assets/images/pencil.png" style="width: 15px; height: 15%;"></button>
+                                    <button class="delete-button"><img src="/assets/images/trash-can.png" style="width: 15px; height: 15%;"></button>
+                                </td>
                               </tr>
                             </tbody>
                           </table>
@@ -161,6 +235,29 @@
                     </div>
                   </div>
             </div>
+            <div id="editModal" class="modal">
+                <div class="modal-content">
+                  <span class="close">&times;</span>
+                  <h2>Edit Data</h2>
+                  <form id="edit-data-form">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6">
+                            <label for="department">Department :</label>
+                            <input type="text" id="department" name="department">
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <label for="description">Description :</label>
+                            <input type="text" id="description" name="Description">
+                        </div>
+                        <div class="row" style="margin-top: 10px;">
+                            <div class="col-md-12 col-lg-12 text-center">
+                                <button type="submit" class="btn btn-info">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
             <div class="row">
             </div>
             <div class="row">
@@ -188,6 +285,7 @@
     <!-- Plugin js for this page -->
     <!-- End plugin js for this page -->
     <!-- inject:js -->
+    <script src="../../assets/js/script_division.js"></script>
     <script src="../../assets/js/off-canvas.js"></script>
     <script src="../../assets/js/hoverable-collapse.js"></script>
     <script src="../../assets/js/misc.js"></script>
