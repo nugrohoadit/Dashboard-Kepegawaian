@@ -222,13 +222,14 @@
               error: function (xhr, status, error) {
                 alert("Error fetching data: " + xhr.responseText);
               }
+              
             });
           } else {
             // Jika token tidak ada, mungkin pengguna belum login
             $("#tokenDisplay").text("Token not found. Please login first.");
           }
 
-
+          
         });
       </script>
 </body>
