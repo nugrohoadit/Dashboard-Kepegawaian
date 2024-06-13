@@ -111,7 +111,7 @@
                       <input type="number" class="form-control" id="no_tlpn" placeholder="Phone Number">
                     </div>
                     <div class="form-group">
-                      <label id="jenis_kelamin" for="exampleSelectGender">Gender</label>
+                      <label for="exampleSelectGender">Gender</label>
                       <select class="form-select text-black" id="jenis_kelamin">
                         <option>Laki-Laki</option>
                         <option>Perempuan</option>
@@ -182,25 +182,22 @@
 
           // Lakukan permintaan AJAX untuk mendapatkan data pegawai berdasarkan ID
           $.ajax({
-            url: "http://localhost:3000/pegawai",
+            url: "http://localhost:3000/pegawai/" + id,
             type: "GET",
             headers: {
               "Authorization": "Bearer " + token
             },
             success: function (response) {
               if (response.data && response.data.length > 0) {
-                var employeeData = response.data;
-
-                console.log("data -->", employeeData[0]['divisi']['divisi']);
+                var employeeData = response.data[0];
                 // Isi formulir dengan data pegawai yang diperoleh
-                $("#editpegawai #nama").val(employeeData[0]['nama']);
-                $("#editpegawai #alamat").val(employeeData[0]['alamat']);
-                $("#editpegawai #no_tlpn").val(employeeData[0]['no_tlpn']);
-                var selectedGender = employeeData[0]['jenis_kelamin'];
-                $("#editpegawai #jenis_kelamin").val(selectedGender);
-                var selectedDivisi = employeeData[0]['divisi']['divisi']
-                $("#editpegawai #divisi").val(selectedDivisi);
+                $("#editpegawai #nama").val(employeeData.nama);
+                $("#editpegawai #alamat").val(employeeData.alamat);
+                $("#editpegawai #no_tlpn").val(employeeData.no_tlpn);
+                $("#editpegawai #jenis_kelamin").val(employeeData.jenis_kelamin);
+                var selectedDivisiId = employeeData.divisi_id;
 
+                // Lakukan permintaan AJAX untuk mendapatkan data divisi
                 $.ajax({
                   url: "http://localhost:3000/divisi",
                   method: "GET",
@@ -216,8 +213,8 @@
 
                       // Populate the division select element with the data received
                       divisions.forEach(function (division) {
-                        var isSelected = (division.divisi === selectedDivisi) ? 'selected' : '';
-                        $("#editpegawai #divisi").append('<option value="' + division.divisi + '" ' + isSelected + '>' + division.divisi + '</option>');
+                        var isSelected = (division.id === selectedDivisiId) ? 'selected' : '';
+                        $("#editpegawai #divisi").append('<option value="' + division.id + '" ' + isSelected + '>' + division.divisi + '</option>');
                       });
                     }
                   },
@@ -225,9 +222,44 @@
                     console.error("Error fetching division data:", error);
                   }
                 });
+
+                // Handle form submission
+                $("#editpegawai").submit(function (event) {
+                  event.preventDefault(); // Prevent default form submission
+
+                  // Collect the form data
+                  var updatedEmployee = {
+                    id: employeeData.id,
+                    nama: $("#editpegawai #nama").val(),
+                    alamat: $("#editpegawai #alamat").val(),
+                    no_tlpn: $("#editpegawai #no_tlpn").val(),
+                    jenis_kelamin: $("#editpegawai #jenis_kelamin").find(":selected").val(),
+                    divisi_id: $("#editpegawai #divisi").val() // Send the division ID
+                  };
+
+                  console.log(updatedEmployee);
+                  // Send the updated data to the API using a PUT request
+                  $.ajax({
+                    url: "http://localhost:3000/pegawai/",
+                    method: "PUT",
+                    headers: {
+                      "Authorization": "Bearer " + token
+                    },
+                    contentType: "application/json",
+                    data: JSON.stringify(updatedEmployee),
+                    success: function (response) {
+                      console.log(response);
+                      // Optionally redirect or display a success message
+                    },
+                    error: function (error) {
+                      console.error("Error updating employee:", error);
+                    }
+                  });
+                });
+
+              } else {
+                alert("Employee not found");
               }
-
-
             },
             error: function (xhr, status, error) {
               alert("Error fetching data: " + xhr.responseText);
