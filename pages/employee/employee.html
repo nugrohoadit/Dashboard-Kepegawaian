@@ -20,55 +20,16 @@
   <!-- End layout styles -->
   <link rel="shortcut icon" href="../../../assets/images/favicon.png" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
   <div class="container-scroller">
     <!-- partial:../../partials/_navbar.html -->
-    <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <a class="navbar-brand brand-logo" href="index.html">
-          <img src="/assets/images/logo.svg" alt="logo" class="logo-dark" />
-          <img src="/assets/images/logo-light.svg" alt="logo-light" class="logo-light">
-        </a>
-        <a class="navbar-brand brand-logo-mini" href="index.html"><img src="/assets/images/logo-mini.svg"
-            alt="logo" /></a>
-        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-          <span class="icon-menu"></span>
-        </button>
-      </div>
-      <div class="navbar-menu-wrapper d-flex align-items-center">
-        <h5 class="mb-0 font-weight-medium d-none d-lg-flex">Welcome to RML!</h5>
-        <ul class="navbar-nav navbar-nav-right">
-          <form class="search-form d-none d-md-block" action="#">
+    <div id="navbar"></div>
 
-          </form>
-          <li class="nav-item dropdown d-none d-xl-inline-flex user-dropdown">
-            <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-bs-toggle="dropdown"
-              aria-expanded="false">
-              <img class="img-xs rounded-circle ms-2" src="/assets/images/faces/face8.jpg" alt="Profile image"> <span
-                class="font-weight-normal"> Henry Klein </span></a>
-            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
-              <div class="dropdown-header text-center">
-                <img class="img-md rounded-circle" src="/assets/images/faces/face8.jpg" alt="Profile image">
-                <p class="mb-1 mt-3">Henry Klein</p>
-                <p class="font-weight-light text-muted mb-0">kleinhenry@gmail.com</p>
-              </div>
-              <a class="dropdown-item"><i class="dropdown-item-icon icon-user text-primary"></i> My Profile <span
-                  class="badge badge-pill badge-danger">1</span></a>
-              <a class="dropdown-item"><i class="dropdown-item-icon icon-power text-primary"></i>Sign Out</a>
-            </div>
-          </li>
-        </ul>
-        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
-          data-toggle="offcanvas">
-          <span class="icon-menu"></span>
-        </button>
-      </div>
-    </nav>
     <!-- partial -->
-    <div class="container-fluid page-body-wrapper">
+    <div class="container-fluid page-body-wrapper mt-5">
       <!-- partial:partials/_sidebar.html -->
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
@@ -155,10 +116,11 @@
                           <th> Telepon </th>
                           <th> Jenis Kelamin </th>
                           <th> Divisi </th>
+                          <th> Action</th>
                         </tr>
                       </thead>
                       <tbody>
-                      
+
                       </tbody>
                     </table>
                   </div>
@@ -166,7 +128,7 @@
               </div>
             </div>
           </div>
-        
+
           <div class="row">
           </div>
           <div class="row">
@@ -205,61 +167,69 @@
       <!-- End custom js for this page -->
 
       <script>
-           var token = sessionStorage.getItem('token');
-           console.log("tokeenn -->>", token);
+        $(function () {
+          $("#navbar").load("/partials/_navbar.html", function (response, status, xhr) {
+            if (status == "error") {
+              console.log("Error loading navbar: " + xhr.status + " " + xhr.statusText);
+            }
+          });
+        });
       </script>
+      <script>
+        $(document).ready(function () {
+          // Ambil token dari session storage
+          var token = sessionStorage.getItem('token');
 
-<script>
-  $(document).ready(function() {
-      // Ambil token dari session storage
-      var token = sessionStorage.getItem('token');
+          // Cek apakah token ada
+          if (token) {
+            // Jika token ada, tampilkan ke pengguna
+            $("#tokenDisplay").text("Token: " + token);
 
-      // Cek apakah token ada
-      if (token) {
-          // Jika token ada, tampilkan ke pengguna
-          $("#tokenDisplay").text("Token: " + token);
-          
-          // Dapatkan data pegawai
-          $.ajax({
+            // Dapatkan data pegawai
+            $.ajax({
               url: "http://localhost:3000/pegawai",
               type: "GET",
               headers: {
-                  "Authorization": "Bearer " + token
+                "Authorization": "Bearer " + token
               },
-              success: function(response) {
-                  if(response.data && response.data.length > 0) {
-                      var pegawaiData = response.data;
-                      var tableBody = $("#pegawaiTable tbody");
-                      tableBody.empty(); // Clear existing rows
+              success: function (response) {
+                if (response.data && response.data.length > 0) {
+                  var pegawaiData = response.data;
+                  var tableBody = $("#pegawaiTable tbody");
+                  tableBody.empty(); // Clear existing rows
 
-                      // Loop melalui setiap pegawai dan tambahkan ke tabel
-                      pegawaiData.forEach(function(pegawai, index) {
-                          var row = "<tr>" +
-                              "<td>" + (index+1) + "</td>" +
-                              "<td>" + pegawai.nama + "</td>" +
-                              "<td>" + pegawai.alamat + "</td>" +
-                              "<td>" + pegawai.no_tlpn + "</td>" +
-                              "<td>" + pegawai.jenis_kelamin + "</td>" +
-                              "<td>" + pegawai.divisi.divisi + "</td>" +
-                              "</tr>";
-                          tableBody.append(row);
-                      });
-                  } else {
-                      $("#pegawaiTable tbody").append("<tr><td colspan='6'>No data available</td></tr>");
-                  }
+                  // Loop melalui setiap pegawai dan tambahkan ke tabel
+                  pegawaiData.forEach(function (pegawai, index) {
+                    var row = "<tr>" +
+                      "<td>" + (index + 1) + "</td>" +
+                      "<td>" + pegawai.nama + "</td>" +
+                      "<td>" + pegawai.alamat + "</td>" +
+                      "<td>" + pegawai.no_tlpn + "</td>" +
+                      "<td>" + pegawai.jenis_kelamin + "</td>" +
+                      "<td>" + pegawai.divisi.divisi + "</td>" +
+                      "<td>" +
+                      "<a href='/pages/employee/edit_employee.html?id=" + pegawai.id + "' class='mr-2'><i class='fas fa-edit'> </i></a> " +
+                      "<a href='#' class='text-danger'><i class='fas fa-trash'></i></a>" +
+                      "</td>" +
+                      "</tr>";
+                    tableBody.append(row);
+                  });
+                } else {
+                  $("#pegawaiTable tbody").append("<tr><td colspan='6'>No data available</td></tr>");
+                }
               },
-              error: function(xhr, status, error) {
-                  alert("Error fetching data: " + xhr.responseText);
+              error: function (xhr, status, error) {
+                alert("Error fetching data: " + xhr.responseText);
               }
-          });
-      } else {
-          // Jika token tidak ada, mungkin pengguna belum login
-          $("#tokenDisplay").text("Token not found. Please login first.");
-      }
+            });
+          } else {
+            // Jika token tidak ada, mungkin pengguna belum login
+            $("#tokenDisplay").text("Token not found. Please login first.");
+          }
 
-     
-  });
-</script>
+
+        });
+      </script>
 </body>
 
 </html>
