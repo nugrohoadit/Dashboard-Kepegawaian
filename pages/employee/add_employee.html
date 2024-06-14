@@ -160,11 +160,11 @@
     var token = sessionStorage.getItem('token');
 
     // Ambil nilai dari input
-    var nama = $("#nama").val();
-    var address = $("#alamat").val();
-    var no_tlpn = $("#no_tlpn").val();
-    var jenis_kelamin = $("#jenis_kelamin").val();
-    var divisi = $("#divisi").val();
+    var nama = $("#forminsert #nama").val();
+    var address = $("#forminsert #alamat").val();
+    var no_tlpn = $("#forminsert #no_tlpn").val();
+    var jenis_kelamin = $("#forminsert #jenis_kelamin").val();
+    var divisi = $("#forminsert #divisi").val();
 
     // Buat objek data yang akan dikirimkan ke backend
     var data = {
