@@ -94,35 +94,35 @@
                       <div class="card-body">
                         <h4 class="card-title">Input new Employee</h4>
                         <p class="card-description"> PT Raditya Mulia Lestari </p>
-                        <form class="forms-sample">
+                        <form class="forms-sample" id="forminsert ">
                           <div class="form-group">
                             <label for="exampleInputName1">Name</label>
-                            <input type="text" class="form-control" id="employeename" placeholder="Name">
+                            <input type="text" class="form-control" id="nama" placeholder="Name">
                           </div>
                           <div class="form-group">
                             <label for="exampleInputEmail3">Address</label>
-                            <input type="address" class="form-control" id="address" placeholder="Address">
+                            <input type="address" class="form-control" id="alamat" placeholder="Address">
                           </div>
                           <div class="form-group">
                             <label for="exampleInputPassword4">Phone Number</label>
-                            <input type="password" class="form-control" id="phonenumber" placeholder="Password">
+                            <input type="text" class="form-control" id="no_tlpn" placeholder="Password">
                           </div>
                           <div class="form-group">
                             <label for="exampleSelectGender">Gender</label>
-                            <select class="form-select" id="exampleSelectGender">
+                            <select class="form-select" id="jenis_kelamin">
                               <option>Male</option>
                               <option>Female</option>
                             </select>
                           </div>
                           <div class="form-group">
                             <label for="exampleSelectGender">Division</label>
-                            <select class="form-select" id="exampleSelectGender">
+                            <select class="form-select" id="divisi">
                               <option>Sales</option>
                               <option>Technical</option>
                               <option>Admin</option>
                             </select>
                           </div>
-                          <button type="submit" class="btn btn-primary me-2">Submit</button>
+                          <button type="submit" class="btn btn-primary me-2" onclick="insertEmployeeData();">Submit</button>
                           <button class="btn btn-light">Cancel</button>
                         </form>
                       </div>
@@ -154,6 +154,53 @@
       </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
+    <script>
+      function insertEmployeeData() {
+    // Ambil token dari session storage
+    var token = sessionStorage.getItem('token');
+
+    // Ambil nilai dari input
+    var nama = $("#nama").val();
+    var address = $("#alamat").val();
+    var no_tlpn = $("#no_tlpn").val();
+    var jenis_kelamin = $("#jenis_kelamin").val();
+    var divisi = $("#divisi").val();
+
+    // Buat objek data yang akan dikirimkan ke backend
+    var data = {
+        nama: nama,
+        alamat: address,
+        no_tlpn: no_tlpn,
+        jenis_kelamin: jenis_kelamin,
+        divisi: divisi
+    };
+    console.log(data);
+
+    // URL endpoint backend untuk menyimpan data ke database
+    var url = 'http://localhost:3000/pegawai';
+
+    // Lakukan permintaan AJAX untuk menyimpan data pegawai
+    $.ajax({
+        url: url,
+        type: "POST",
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        data: JSON.stringify(data),
+        success: function (response) {
+            // Tampilkan pesan sukses atau lakukan tindakan lanjutan jika perlu
+            alert("Data pegawai berhasil ditambahkan");
+            console.log(response);
+            // Kemungkinan tindakan lanjutan setelah berhasil menambahkan data
+        },
+        error: function (xhr, status, error) {
+            // Tangani kesalahan jika terjadi
+            alert("Error inserting data: " + xhr.responseText);
+        }
+    });
+}
+
+    </script>
     <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->
@@ -168,6 +215,7 @@
     <!-- Custom js for this page -->
     <!-- End custom js for this page -->
     <script>
+
       $(function () {
         $("#navbar").load("/partials/_navbar.html", function (response, status, xhr) {
           if (status == "error") {
