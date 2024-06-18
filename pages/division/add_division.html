@@ -186,15 +186,22 @@
     <!-- container-scroller -->
     <!-- plugins:js -->
     <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
+   
+    <script src="../../assets/js/off-canvas.js"></script>
+    <script src="../../assets/js/hoverable-collapse.js"></script>
+    <script src="../../assets/js/misc.js"></script>
+    <script src="../../assets/js/settings.js"></script>
+    <script src="../../assets/js/todolist.js"></script>
     <script>
       $(document).ready(function () {
-        $("formdivisi").submit(function (event) {
-          event.preventDefault();
-          var token = sessionStorage.getItem('token');
+        var token = sessionStorage.getItem('token');
 
+        $("#formdivisi").submit(function (event) {
+          event.preventDefault();
+        
           var divisi = $("#divisi").val();
           var description = $("#description").val();
-
+          console.log(divisi);
           var data = {
             divisi: divisi,
             description: description
@@ -213,6 +220,7 @@
             data: JSON.stringify(data),
             success: function (response) {
               console.log(response);
+              window.location.href = '/pages/division/division.html';
             },
             error: function (xhr, status, error){
               alert("Error insert data: " + xhr.responseText);
@@ -229,10 +237,5 @@
           });
         });
     </script>
-    <script src="../../assets/js/off-canvas.js"></script>
-    <script src="../../assets/js/hoverable-collapse.js"></script>
-    <script src="../../assets/js/misc.js"></script>
-    <script src="../../assets/js/settings.js"></script>
-    <script src="../../assets/js/todolist.js"></script>
   </body>
 </html>
